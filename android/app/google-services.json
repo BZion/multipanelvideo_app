@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "608442750532",
+    "project_id": "moviepanelapp",
+    "storage_bucket": "moviepanelapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:608442750532:android:ba83f0754f81c71d7a8e11",
+        "android_client_info": {
+          "package_name": "com.example.multipanelvideo_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "608442750532-8t1tui0pl41tb47rl68k9h706efq3dc6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD30_gwJr57vYfzoQxnNGG5nQ8J05HwhgI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "608442750532-8t1tui0pl41tb47rl68k9h706efq3dc6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

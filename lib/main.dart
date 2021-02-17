@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'login.dart';
+import 'register.dart';
 
 void main() => runApp(VideoPlayerApp());
 
@@ -35,7 +37,7 @@ class HomePageState extends State<HomePage>{
       //Nach dem Teaser
       VideoPlayerScreen('https://player.vimeo.com/external/475146749.sd.mp4?s=24bc3b95975e259841444e9b7f9a8e0c09badfb1&profile_id=165',_pageController),
       //Platzhalter für die Login Seite
-      Container(child: Text("Login Seite")),
+      register(),
       //Auswahlseite Anleitung
       //VideoPlayerScreen('https://player.vimeo.com/external/475147068.hd.mp4?s=3baa5f1602a825b64ca360228ca23e516b825ec6&profile_id=175', _pageController),
       Auswahlseite(_pageController)
