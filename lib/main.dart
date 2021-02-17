@@ -29,7 +29,7 @@ class HomePageState extends State<HomePage>{
   Widget build(BuildContext context) {
     List<Widget> c = [
       //Teaser
-      VideoPlayerScreen('https://player.vimeo.com/external/475146619.sd.mp4?s=9e8126ba00891010a4f32c93b8ebf79f55d01c4e&profile_id=165',_pageController),
+      VideoPlayerScreen('https://player.vimeo.com/external/478420658.hd.mp4?s=6f8bf4fbd005988f8ac50db2cb0856845cefceca&profile_id=175',_pageController),
       //Begrüßung
       VideoPlayerScreen('https://player.vimeo.com/external/475146519.sd.mp4?s=f727a2bf5f1586a0466d2c11ab6f65ee524c187a&profile_id=165',_pageController),
       //Nach dem Teaser
@@ -37,8 +37,8 @@ class HomePageState extends State<HomePage>{
       //Platzhalter für die Login Seite
       Container(child: Text("Login Seite")),
       //Auswahlseite Anleitung
-      VideoPlayerScreen('https://player.vimeo.com/external/475147068.hd.mp4?s=3baa5f1602a825b64ca360228ca23e516b825ec6&profile_id=175', _pageController),
-      Auswahlseite()
+      //VideoPlayerScreen('https://player.vimeo.com/external/475147068.hd.mp4?s=3baa5f1602a825b64ca360228ca23e516b825ec6&profile_id=175', _pageController),
+      Auswahlseite(_pageController)
       //VideoPlayerScreen('https://player.vimeo.com/external/475146948.hd.mp4?s=02155c3f2f4bbaf859a774a6b307bf35492f8e27&profile_id=175', _pageController)
     ];
 
@@ -47,27 +47,36 @@ class HomePageState extends State<HomePage>{
 }
 
 class Auswahlseite extends StatelessWidget {
+  PageController _pageController;
+
+  Auswahlseite(_pageController){
+    this._pageController = _pageController;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: CarouselSlider(
-        options: CarouselOptions(height: 400.0),
-        items: [1,2,3,4,5].map((i) {
-          return Builder(
-            builder: (BuildContext context) {
-              return Container(
-                  width: MediaQuery.of(context).size.width,
-                  margin: EdgeInsets.symmetric(horizontal: 5.0),
-                  decoration: BoxDecoration(
-                      color: Colors.amber
-                  ),
-                  child: Text('text $i', style: TextStyle(fontSize: 16.0),)
+      body: new Container(child: new Stack(alignment: Alignment(0,0),children: [
+      VideoPlayerScreen('https://player.vimeo.com/external/506207858.hd.mp4?s=d28f9441033be60381cf9f1d6b4ce78d78c1ceb1&profile_id=175', _pageController),
+        CarouselSlider(
+            options: CarouselOptions(height: 175, viewportFraction: 0.3 , enlargeCenterPage: true ),
+            items: [1,2,3,4,5].map((i) {
+              return Builder(
+                builder: (BuildContext context) {
+                  return Container(
+                      width: 100,
+                      margin: EdgeInsets.symmetric(horizontal: 5.0),
+                      decoration: BoxDecoration(
+                          color: Colors.amber
+                      ),
+                      child: Text('text $i', style: TextStyle(fontSize: 16.0),)
+                  );
+                },
               );
-            },
-          );
-        }).toList(),
-      )
-    );
+            }).toList())
+      ]
+      ),)
+      );
   }
   
 }
