@@ -1,10 +1,10 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:video_player/video_player.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'login.dart';
 import 'register.dart';
+import 'TrailerScreen.dart';
+import 'VideoPlayerScreen.dart';
 
 void main() => runApp(VideoPlayerApp());
 
@@ -57,21 +57,41 @@ class Auswahlseite extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    List<ImageAndTrailer> iat = new List();
+    for(int i = 0; i<5;i++){
+      iat.add(new ImageAndTrailer(
+          new TrailerScreen('https://player.vimeo.com/external/486511656.sd.mp4?s=36911a8a987389e158baf9952e07612db30c3b18&profile_id=165', new PageController()),
+          Container(
+              width: 100, height: 200,
+              margin: EdgeInsets.symmetric(horizontal: 5.0),
+              decoration: BoxDecoration(
+                  color: Colors.amber
+              ),
+              child:Text('Bild $i', style: TextStyle(fontSize: 16.0))
+          )));
+      print(iat.elementAt(i).trailer);
+    }
+
+
+
+
     return Scaffold(
       body: new Container(child: new Stack(alignment: Alignment(0,0),children: [
       VideoPlayerScreen('https://player.vimeo.com/external/506207858.hd.mp4?s=d28f9441033be60381cf9f1d6b4ce78d78c1ceb1&profile_id=175', _pageController),
         CarouselSlider(
-            options: CarouselOptions(height: 175, viewportFraction: 0.3 , enlargeCenterPage: true ),
-            items: [1,2,3,4,5].map((i) {
+            options: CarouselOptions(height:550, viewportFraction: 0.4 , enlargeCenterPage: true, onPageChanged:(index, reason) => {
+             iat.elementAt(index).trailer.play()
+            }, ),
+            items: iat.map((i) {
               return Builder(
                 builder: (BuildContext context) {
-                  return Container(
-                      width: 100,
-                      margin: EdgeInsets.symmetric(horizontal: 5.0),
-                      decoration: BoxDecoration(
-                          color: Colors.amber
-                      ),
-                      child: Text('text $i', style: TextStyle(fontSize: 16.0),)
+                  return Column( children: [
+                    SizedBox(height: 200),
+                    Flexible(child: i.con)
+                    ,SizedBox(height: 100),
+                    Flexible(child: i.trailer),
+                  ]
                   );
                 },
               );
@@ -80,94 +100,15 @@ class Auswahlseite extends StatelessWidget {
       ),)
       );
   }
-  
 }
 
-
-class VideoPlayerScreen extends StatefulWidget {
-  String _link;
-  PageController _pageController;
-  VideoPlayerController _controller;
-  VideoPlayerScreen(_link, _pageController) {
-    print("VideoPlayerScreen");
-    this._link=_link;
-    this._pageController = _pageController;
-    this._controller = VideoPlayerController.network(_link);
-  }
-
-  @override
-  _VideoPlayerScreenState createState() => _VideoPlayerScreenState(_link,_pageController,_controller);
-
-}
-
-class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
-  VideoPlayerController _controller;
-  PageController _pageController;
-  Future<void> _initializeVideoPlayerFuture;
-  bool _isVisible = false;
-  String _link;
-  Duration _duration = Duration(milliseconds: 200);
-
-  _VideoPlayerScreenState(_link,_pageController,_controller){
-    this._link=_link;
-    this._pageController = _pageController;
-  //  this._controller=_controller;
-    print("VideoPlayerScreenState");
-  }
-
-  @override
-  void initState() {
-    // Create and store the VideoPlayerController. The VideoPlayerController
-    // offers several different constructors to play videos from assets, files,
-    // or the internet.
-    print("initState");
-    if(_controller==null){
-      print("_controller==null");
-      _controller = VideoPlayerController.network(_link,
-    )..initialize().then((_){setState(() {
-
-    });});
-    }
-    _controller.play();
-  }
-
-  @override
-  void dispose() {
-    // Ensure disposing of the VideoPlayerController to free up resources.
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(  onHorizontalDragEnd: (dragEndDetails) {
-      print("onHorizontalDragEnd");
-      print("_pageController.page"+_pageController.page.toString());
-      if (dragEndDetails.primaryVelocity < 0) {
-        // Page forwards
-        print('Move page forwards');
-        _pageController.nextPage(duration: _duration, curve: Curves.ease);
-        //_pageController.animateToPage(3, duration: _duration, curve: Curves.ease);
-      } else if (dragEndDetails.primaryVelocity > 0) {
-        // Page backwards
-        print('Move page backwards');
-        _pageController.previousPage(duration: _duration, curve: Curves.ease);
-      }
-    },onVerticalDragUpdate: (dragEndDetails){
-        print('Additional Content');
-    },onTap: onTap,
-    child:VideoPlayer(_controller));
-  }
-  onTap(){
-    setState(() {
-      // If the video is playing, pause it.
-      if (_controller.value.isPlaying) {
-        _controller.pause();
-      } else {
-        // If the video is paused, play it.
-        _controller.play();
-      }
-    });
+class ImageAndTrailer {
+  Image img;
+  TrailerScreen trailer;
+  Container con;
+  ImageAndTrailer(trailer,container){
+    this.trailer=trailer;
+    this.con = container;
   }
 
 }
