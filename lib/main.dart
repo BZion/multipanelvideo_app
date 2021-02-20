@@ -1,10 +1,17 @@
 import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'login.dart';
 import 'register.dart';
 import 'TrailerScreen.dart';
 import 'VideoPlayerScreen.dart';
+import 'package:flutter/material.dart';
+
+// Import the firebase_core plugin
+import 'package:firebase_core/firebase_core.dart';
+
+
 import 'package:firebase_core/firebase_core.dart';
 void main() => runApp(VideoPlayerApp());
 
@@ -24,8 +31,30 @@ class HomePage extends StatefulWidget{
 }
 
 class HomePageState extends State<HomePage>{
-
+  bool _initialized = false;
+  bool _error = false;
   PageController _pageController = PageController(initialPage: 1);
+
+  // Define an async function to initialize FlutterFire
+  void initializeFlutterFire() async {
+    try {
+      // Wait for Firebase to initialize and set `_initialized` state to true
+      await Firebase.initializeApp();
+      setState(() {
+        _initialized = true;
+      });
+    } catch(e) {
+      // Set `_error` state to true if Firebase initialization fails
+      setState(() {
+        _error = true;
+      });
+  }
+}
+  @override
+  void initState() {
+    initializeFlutterFire();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +69,7 @@ class HomePageState extends State<HomePage>{
       register(_pageController),
       //Auswahlseite Anleitung
       //VideoPlayerScreen('https://player.vimeo.com/external/475147068.hd.mp4?s=3baa5f1602a825b64ca360228ca23e516b825ec6&profile_id=175', _pageController),
-     // Auswahlseite(_pageController)
+      Auswahlseite(_pageController)
       //VideoPlayerScreen('https://player.vimeo.com/external/475146948.hd.mp4?s=02155c3f2f4bbaf859a774a6b307bf35492f8e27&profile_id=175', _pageController)
     ];
 
@@ -53,11 +82,31 @@ class Auswahlseite extends StatelessWidget {
 
   Auswahlseite(_pageController){
     this._pageController = _pageController;
-
   }
 
   @override
   Widget build(BuildContext context) {
+
+    CollectionReference filme = FirebaseFirestore.instance.collection('Filme');
+
+     FutureBuilder<DocumentSnapshot>(
+      future: filme.doc('DSDL').get(),
+      builder:
+          (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+
+        if (snapshot.hasError) {
+          return Text("Something went wrong");
+        }
+
+        if (snapshot.connectionState == ConnectionState.done) {
+          Map<String, dynamic> data = snapshot.data.data();
+          print("S01 Link: ${data['S01']}");
+          return Text("S01 Link: ${data['S01']}");
+        }
+
+        return Text("loading");
+      },
+    );
 
     List<ImageAndTrailer> iat = new List();
     for(int i = 0; i<5;i++){
@@ -111,4 +160,5 @@ class ImageAndTrailer {
     this.trailer=trailer;
     this.con = container;
   }
+
 }
