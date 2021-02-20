@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
+import 'main.dart';
 import 'login.dart';
 
-void main() => runApp(register());
 
 class register extends StatelessWidget {
+  PageController _pageController;
+  register(_pageController){
+    this._pageController = _pageController;
+  }
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -15,17 +18,25 @@ class register extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(),
+      home: MyHomePage(_pageController),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
+  PageController _pageController;
+  MyHomePage(_pageController){
+    this._pageController = _pageController;
+  }
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _MyHomePageState createState() => _MyHomePageState(_pageController);
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  PageController _pageController;
+  _MyHomePageState(_pageController){
+    this._pageController = _pageController;
+  }
   final _auth = FirebaseAuth.instance;
   bool showProgress = false;
 
@@ -33,10 +44,15 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("MultipanelMovie-App"),
-      ),
-      body: Center(
+
+
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("assets/Auswahl_hintergrund.PNG"),
+            fit: BoxFit.cover,
+          ),
+        ),
         child: ModalProgressHUD(
           inAsyncCall: showProgress,
           child: Column(
@@ -44,7 +60,7 @@ class _MyHomePageState extends State<MyHomePage> {
             children: <Widget>[
               Text(
                 "Registration Page",
-                style: TextStyle(fontWeight: FontWeight.w800, fontSize: 20.0),
+                style: TextStyle(fontWeight: FontWeight.w800, fontSize: 20.0, color: Colors.red),
               ),
               SizedBox(
                 height: 20.0,
@@ -95,7 +111,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => MyLoginPage()),
+                              builder: (context) => MyLoginPage(_pageController)),
                         );
 
                         setState(() {
@@ -120,7 +136,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => MyLoginPage()),
+                    MaterialPageRoute(builder: (context) => MyLoginPage(_pageController)),
                   );
                 },
                 child: Text(

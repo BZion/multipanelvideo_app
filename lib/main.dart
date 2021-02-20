@@ -5,7 +5,7 @@ import 'login.dart';
 import 'register.dart';
 import 'TrailerScreen.dart';
 import 'VideoPlayerScreen.dart';
-
+import 'package:firebase_core/firebase_core.dart';
 void main() => runApp(VideoPlayerApp());
 
 class VideoPlayerApp extends StatelessWidget {
@@ -37,10 +37,10 @@ class HomePageState extends State<HomePage>{
       //Nach dem Teaser
       VideoPlayerScreen('https://player.vimeo.com/external/475146749.sd.mp4?s=24bc3b95975e259841444e9b7f9a8e0c09badfb1&profile_id=165',_pageController),
       //Platzhalter für die Login Seite
-      register(),
+      register(_pageController),
       //Auswahlseite Anleitung
       //VideoPlayerScreen('https://player.vimeo.com/external/475147068.hd.mp4?s=3baa5f1602a825b64ca360228ca23e516b825ec6&profile_id=175', _pageController),
-      Auswahlseite(_pageController)
+     // Auswahlseite(_pageController)
       //VideoPlayerScreen('https://player.vimeo.com/external/475146948.hd.mp4?s=02155c3f2f4bbaf859a774a6b307bf35492f8e27&profile_id=175', _pageController)
     ];
 
@@ -53,6 +53,7 @@ class Auswahlseite extends StatelessWidget {
 
   Auswahlseite(_pageController){
     this._pageController = _pageController;
+
   }
 
   @override
@@ -110,5 +111,4 @@ class ImageAndTrailer {
     this.trailer=trailer;
     this.con = container;
   }
-
 }
