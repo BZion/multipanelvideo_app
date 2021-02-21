@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -78,53 +79,28 @@ class HomePageState extends State<HomePage>{
 }
 
 class Auswahlseite extends StatelessWidget {
+  List<ImageAndTrailer> iat = new List();
   PageController _pageController;
 
   Auswahlseite(_pageController){
     this._pageController = _pageController;
+    getData();
+  }
+
+  Future<List<ImageAndTrailer>> getData() async {
+    Firebase.initializeApp();
+    CollectionReference filme = FirebaseFirestore.instance.collection('Filme');
+    filme.get().then((value) => {
+      value.docs.forEach((element) {
+        iat.add(new ImageAndTrailer(new TrailerScreen(element.get("Loop"),_pageController),Image.network(element.get("Plakat"))
+        ));
+      })
+    });
+    return iat;
   }
 
   @override
   Widget build(BuildContext context) {
-
-    CollectionReference filme = FirebaseFirestore.instance.collection('Filme');
-
-     FutureBuilder<DocumentSnapshot>(
-      future: filme.doc('DSDL').get(),
-      builder:
-          (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-
-        if (snapshot.hasError) {
-          return Text("Something went wrong");
-        }
-
-        if (snapshot.connectionState == ConnectionState.done) {
-          Map<String, dynamic> data = snapshot.data.data();
-          print("S01 Link: ${data['S01']}");
-          return Text("S01 Link: ${data['S01']}");
-        }
-
-        return Text("loading");
-      },
-    );
-
-    List<ImageAndTrailer> iat = new List();
-    for(int i = 0; i<5;i++){
-      iat.add(new ImageAndTrailer(
-          new TrailerScreen('https://player.vimeo.com/external/486511656.sd.mp4?s=36911a8a987389e158baf9952e07612db30c3b18&profile_id=165', new PageController()),
-          Container(
-              width: 100, height: 200,
-              margin: EdgeInsets.symmetric(horizontal: 5.0),
-              decoration: BoxDecoration(
-                  color: Colors.amber
-              ),
-              child:Text('Bild $i', style: TextStyle(fontSize: 16.0))
-          )));
-      print(iat.elementAt(i).trailer);
-    }
-
-
-
 
     return Scaffold(
       body: new Container(child: new Stack(alignment: Alignment(0,0),children: [
@@ -138,7 +114,7 @@ class Auswahlseite extends StatelessWidget {
                 builder: (BuildContext context) {
                   return Column( children: [
                     SizedBox(height: 200),
-                    Flexible(child: i.con)
+                    Flexible(child: i.img)
                     ,SizedBox(height: 100),
                     Flexible(child: i.trailer),
                   ]
@@ -155,10 +131,10 @@ class Auswahlseite extends StatelessWidget {
 class ImageAndTrailer {
   Image img;
   TrailerScreen trailer;
-  Container con;
-  ImageAndTrailer(trailer,container){
+
+  ImageAndTrailer(trailer,img){
     this.trailer=trailer;
-    this.con = container;
+    this.img = img;
   }
 
 }
