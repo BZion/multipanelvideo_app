@@ -3,6 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:multipanelvideo_app/FilmPlayer.dart';
 import 'login.dart';
 import 'register.dart';
 import 'TrailerScreen.dart';
@@ -12,9 +13,13 @@ import 'package:flutter/material.dart';
 // Import the firebase_core plugin
 import 'package:firebase_core/firebase_core.dart';
 
-
-import 'package:firebase_core/firebase_core.dart';
-void main() => runApp(VideoPlayerApp());
+void main() async {
+  final alphanumeric = RegExp(r'^S0\d+');
+  print(alphanumeric.hasMatch("S01"));
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(VideoPlayerApp());
+}
 
 class VideoPlayerApp extends StatelessWidget {
   @override
@@ -32,28 +37,10 @@ class HomePage extends StatefulWidget{
 }
 
 class HomePageState extends State<HomePage>{
-  bool _initialized = false;
-  bool _error = false;
   PageController _pageController = PageController(initialPage: 1);
 
-  // Define an async function to initialize FlutterFire
-  void initializeFlutterFire() async {
-    try {
-      // Wait for Firebase to initialize and set `_initialized` state to true
-      await Firebase.initializeApp();
-      setState(() {
-        _initialized = true;
-      });
-    } catch(e) {
-      // Set `_error` state to true if Firebase initialization fails
-      setState(() {
-        _error = true;
-      });
-  }
-}
   @override
   void initState() {
-    initializeFlutterFire();
     super.initState();
   }
 
@@ -88,11 +75,12 @@ class Auswahlseite extends StatelessWidget {
   }
 
   Future<List<ImageAndTrailer>> getData() async {
-    Firebase.initializeApp();
+
     CollectionReference filme = FirebaseFirestore.instance.collection('Filme');
     filme.get().then((value) => {
       value.docs.forEach((element) {
-        iat.add(new ImageAndTrailer(new TrailerScreen(element.get("Loop"),_pageController),Image.network(element.get("Plakat"))
+
+        iat.add(new ImageAndTrailer(new TrailerScreen(element.get("Loop"),_pageController),Image.network(element.get("Plakat")),element.id,element
         ));
       })
     });
@@ -103,20 +91,32 @@ class Auswahlseite extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return Scaffold(
-      body: new Container(child: new Stack(alignment: Alignment(0,0),children: [
+      body: new Container(child: new Stack(children: [
       VideoPlayerScreen('https://player.vimeo.com/external/506207858.hd.mp4?s=d28f9441033be60381cf9f1d6b4ce78d78c1ceb1&profile_id=175', _pageController),
         CarouselSlider(
-            options: CarouselOptions(height:550, viewportFraction: 0.4 , enlargeCenterPage: true, onPageChanged:(index, reason) => {
+            options: CarouselOptions(height: 1000, viewportFraction: 0.6 , enlargeCenterPage: true, onPageChanged:(index, reason) => {
              iat.elementAt(index).trailer.play()
             }, ),
             items: iat.map((i) {
               return Builder(
                 builder: (BuildContext context) {
                   return Column( children: [
-                    SizedBox(height: 200),
-                    Flexible(child: i.img)
-                    ,SizedBox(height: 100),
-                    Flexible(child: i.trailer),
+                    SizedBox(height: 50),
+                    Flexible(fit: FlexFit.loose, child:GestureDetector(child: i.con, onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) =>  new FilmPlayer(i.scenen, "https://player.vimeo.com/external/502234748.hd.mp4?s=884d53467551b607d2e4fb492c91d9dac3a9374c&profile_id=175")),
+                      );
+
+                     },))
+                    ,SizedBox(height: 50),
+                    Flexible(fit: FlexFit.loose, child:GestureDetector(child: i.trailer, onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) =>  new FilmPlayer(i.scenen, "https://player.vimeo.com/external/502234748.hd.mp4?s=884d53467551b607d2e4fb492c91d9dac3a9374c&profile_id=175")),
+                      );
+                    },)),
+                    SizedBox(height: 50)
                   ]
                   );
                 },
@@ -129,12 +129,27 @@ class Auswahlseite extends StatelessWidget {
 }
 
 class ImageAndTrailer {
+
   Image img;
   TrailerScreen trailer;
+  String docID;
+  Container con;
+  List<String> scenen;
 
-  ImageAndTrailer(trailer,img){
+  ImageAndTrailer(trailer,img, docID,QueryDocumentSnapshot doc){
     this.trailer=trailer;
     this.img = img;
+    this.docID = docID;
+    con = new Container(child:img);
+    final alphanumeric = RegExp(r'^S0\d+');
+    scenen= new List();
+    doc.data().forEach((key, value) {
+      if(alphanumeric.hasMatch(key)){
+        scenen.add(value);
+      }
+    });
+    scenen.sort((a, b) => a.compareTo(b));
+
   }
 
 }

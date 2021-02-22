@@ -58,20 +58,12 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(  onHorizontalDragEnd: (dragEndDetails) {
-      print("onHorizontalDragEnd");
-      print("_pageController.page"+_pageController.page.toString());
       if (dragEndDetails.primaryVelocity < 0) {
-        // Page forwards
-        print('Move page forwards');
         _pageController.nextPage(duration: _duration, curve: Curves.ease);
         //_pageController.animateToPage(3, duration: _duration, curve: Curves.ease);
       } else if (dragEndDetails.primaryVelocity > 0) {
-        // Page backwards
-        print('Move page backwards');
         _pageController.previousPage(duration: _duration, curve: Curves.ease);
       }
-    },onVerticalDragUpdate: (dragEndDetails){
-      print('Additional Content');
     },onTap: onTap,
         child:VideoPlayer(_controller));
   }
