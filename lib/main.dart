@@ -105,7 +105,7 @@ class Auswahlseite extends StatelessWidget {
                     Flexible(fit: FlexFit.loose, child:GestureDetector(child: i.con, onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) =>  new FilmPlayer(i.scenen, "https://player.vimeo.com/external/502234748.hd.mp4?s=884d53467551b607d2e4fb492c91d9dac3a9374c&profile_id=175")),
+                        MaterialPageRoute(builder: (context) =>  new FilmPlayer(i.scenen, "https://player.vimeo.com/external/502661920.hd.mp4?s=ea2229cdaebea5df809dae33180132f57509f907&profile_id=175")),
                       );
 
                      },))
@@ -153,3 +153,4 @@ class ImageAndTrailer {
   }
 
 }
+

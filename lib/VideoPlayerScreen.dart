@@ -23,7 +23,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
   Future<void> _initializeVideoPlayerFuture;
   bool _isVisible = false;
   String _link;
-  Duration _duration = Duration(milliseconds: 200);
+  Duration _duration = Duration(milliseconds: 100);
 
   _VideoPlayerScreenState(_link,_pageController,_controller){
     this._link=_link;

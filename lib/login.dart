@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'main.dart';
-import 'register.dart';
 
 
 class login extends StatelessWidget {
+
   PageController _pageController;
   login(_pageController){
     this._pageController = _pageController;
@@ -58,7 +58,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
             children: <Widget>[
               Text(
                 "Login Page",
-                style: TextStyle(fontWeight: FontWeight.w800, fontSize: 20.0, color: Colors.white),
+                style: TextStyle(fontWeight: FontWeight.w800, fontSize: 20.0, color: Colors.grey),
               ),
 
               SizedBox(
@@ -97,7 +97,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
               ),
               Material(
                 elevation: 5,
-                color: Colors.grey,
+                color: Colors.redAccent,
                 borderRadius: BorderRadius.circular(32.0),
                 child: MaterialButton(
                   onPressed: () async {
@@ -110,10 +110,9 @@ class _MyLoginPageState extends State<MyLoginPage> {
                           email: email, password: password);
 
                       print(newUser.toString());
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => Auswahlseite(_pageController)),
-                      );
+                      _pageController.nextPage(duration: Duration(milliseconds: 100), curve: Curves.ease);
+
+                    ;
                       if (newUser != null) {
 
                         setState(() {
@@ -127,7 +126,9 @@ class _MyLoginPageState extends State<MyLoginPage> {
                     } catch (e) {
                       print (e.toString());
                       showAlertDialog(context);
-
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => login(_pageController)));
 
                     }
                   },
@@ -136,7 +137,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
                   child: Text(
                     "Login",
                     style:
-                    TextStyle(fontWeight: FontWeight.w500, fontSize: 20.0, color: Colors.red),
+                    TextStyle(fontWeight: FontWeight.w500, fontSize: 20.0, color: Colors.black),
                   ),
                 ),
               )

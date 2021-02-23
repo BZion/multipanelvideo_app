@@ -60,7 +60,7 @@ class _MyHomePageState extends State<MyHomePage> {
             children: <Widget>[
               Text(
                 "Registration Page",
-                style: TextStyle(fontWeight: FontWeight.w800, fontSize: 20.0, color: Colors.red),
+                style: TextStyle(fontWeight: FontWeight.w800, fontSize: 20.0, color: Colors.grey),
               ),
               SizedBox(
                 height: 20.0,
@@ -95,7 +95,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               Material(
                 elevation: 5,
-                color: Colors.lightBlue,
+                color: Colors.redAccent,
                 borderRadius: BorderRadius.circular(32.0),
                 child: MaterialButton(
                   onPressed: () async {
@@ -142,7 +142,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: Text(
                   "Already Registred? Login Now",
                   style: TextStyle(
-                      color: Colors.blue, fontWeight: FontWeight.w900),
+                      color: Colors.grey, fontWeight: FontWeight.w900),
                 ),
               )
             ],
